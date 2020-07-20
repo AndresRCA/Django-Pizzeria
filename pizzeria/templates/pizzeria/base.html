@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!-- <link rel="icon" href="<%= BASE_URL %>favicon.ico"> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'pizzeria/css/main.css' %}">
+    {% block styles %}{% endblock %}
+    {% block scripts_head %}{% endblock %}
+    <title>{% block title %}Pizzeria{% endblock %}</title>
+  </head>
+  <body>
+    <noscript>
+      <strong>We're sorry but django pizzeria doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    {% block header %}
+    <header id="header" class="hero is-medium">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">Django Pizzeria</h1>
+          <h2 class="subtitle">Un lugar para disfrutar pizza</h2>
+        </div>
+      </div>
+    </header>
+    {% endblock %}
+    {% block navbar %}
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+      <div id="navbarMenu" class="navbar-menu">
+        <div class="navbar-start">
+          {% block navbar_items %}
+          <a href="{% url 'pizzeria:index' %}" class="navbar-item">Inicio</a>
+          <a href="" class="navbar-item">Ordenar</a>
+          {% endblock %}
+        </div>
+      </div>
+    </nav>
+    {% endblock %}
+    <div id="content">
+      {% block content %}{% endblock %}
+    </div>
+    {% block scripts_footer %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,11 @@
+#header {
+  background-image: linear-gradient(rgb(40,40,40), transparent), url(../assets/pizzeria_header.jpeg);
+  background-blend-mode: multiply;
+  background-color: white;
+  background-size: cover;
+  background-position: center;
+}
+
+#header .title, .subtitle {
+  color: white
+}
