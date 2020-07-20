@@ -1,0 +1,134 @@
+{% extends 'pizzeria/base.html' %}
+
+{% block title %}Pizza | Place Order{% endblock %}
+
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'pizzeria/css/place_order.css' %}">
+{% endblock %}
+
+{% block scripts_head %}
+{% if ENV_MODE == 'DEV' %} <!-- ENV_MODE came from pizzeria/context_processors.py -->
+<!-- vue development version -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+{% elif ENV_MODE == 'PRODUCTION' %}
+<!-- vue production version -->
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div id="app" class="container">
+  <h1 class="is-title">Llena los datos para ordenar!</h1>
+  <hr>
+
+  <div> <!-- this is the form wrapper -->
+    <!-- {% csrf_token %} -->
+    <div class="columns">
+      <div class="column">
+        <div class="field is-horizontal is-pulled-left">
+          <div class="field-label is-normal">
+            <label class="label">Cliente</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control is-expanded">
+                <input name="first_name" class="input" type="text" placeholder="Primer Nombre" required>
+              </p>
+            </div>
+            <div class="field">
+              <p class="control is-expanded">
+                <input name="last_name" class="input" type="text" placeholder="Apellido" required>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <h2 class="is-title">Customiza tu pizza</h2>
+    <hr>
+
+    <div class="columns">
+      <div class="column">
+        <div class="field has-addons is-horizontal is-pulled-left">
+          <div class="field-label is-normal">
+            <label class="label">Tamaños:</label>
+          </div>
+          <div class="field-body">
+            <div class="control">
+              <div class="select">
+                <select class="select" v-model="selected_size">
+                  <!-- size options from database -->
+                  <option v-for="size in sizes" :value="size.id">[[ size.name | capitalize ]]</option>
+                </select>
+              </div>
+            </div>
+            <div class="control">
+              <!-- size.price when a size is selected -->
+              <a class="button is-static">[[ size_price | currency ]]</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="columns">
+      <div class="column">
+        <h3 class="is-title">Toppings:</h3>      
+        <div class="field is-grouped is-grouped-multiline">
+          <!-- selected tags go here -->
+          <div v-for="(topping, index) in selected_toppings" :key="topping.id" class="control">
+            <div class="tags has-addons">
+              <span class="tag">[[ topping.name ]]</span>
+              <a @click="removeToppingFromSelected(index)" class="tag is-delete"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <h3 class="is-title">Selecciona tus toppings:</h3>
+        <div id="toppingList" class="field is-grouped is-grouped-multiline">
+          <!-- topping tags are generated here -->
+          <div v-for="topping in toppings" @click="addTopping(topping.id)" class="control">
+            <div class="tags has-addons">
+              <span class="tag">[[ topping.name ]]</span>
+              <span class="tag is-info">[[ topping.price | currency ]]</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="control">
+        <button @click="addPizza" class="button">+Agregar Pizza</button>
+      </div>
+    </div>
+
+    <hr class="is-clearfix">
+    <h2 class="is-title">Pizzas:</h2>
+    <div v-if="pizzas">
+      <ul>
+        <li v-for="(pizza, index) in pizzas">Pizza [[ index+1 ]]: tamaño -> [[ pizza.size | capitalize ]]; toppings -> [[ pizza.getToppingNames().join(', ') ]]</li>
+      </ul>
+    </div>
+    <div v-else>
+      <p>No hay pizzas todavia</p>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts_footer %}
+<!-- data from backend that is later assigned to the script below this one -->
+<script>
+  var sizes = {{ sizes | safe }}
+  var toppings = {{ toppings | safe }}
+</script>
+{% load static %}
+<!-- the vue app file will live here-->
+<script src="{% static 'pizzeria/js/place_order.js' %}"></script>
+{% endblock %}

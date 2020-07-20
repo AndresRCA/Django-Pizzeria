@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <!-- <link rel="icon" href="<%= BASE_URL %>favicon.ico"> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.0/css/bulma.min.css">
     {% load static %}
     <link rel="stylesheet" href="{% static 'pizzeria/css/main.css' %}">
@@ -39,13 +38,13 @@
         <div class="navbar-start">
           {% block navbar_items %}
           <a href="{% url 'pizzeria:index' %}" class="navbar-item">Inicio</a>
-          <a href="" class="navbar-item">Ordenar</a>
+          <a href="{% url 'pizzeria:place_order' %}" class="navbar-item">Ordenar</a>
           {% endblock %}
         </div>
       </div>
     </nav>
     {% endblock %}
-    <div id="content">
+    <div id="content" class="mb-5">
       {% block content %}{% endblock %}
     </div>
     {% block scripts_footer %}{% endblock %}
