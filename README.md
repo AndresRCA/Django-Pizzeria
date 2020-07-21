@@ -1,7 +1,5 @@
 # Diseño de página web para realizar pedidos de pizzas
 
----
-
 ## Componentes
 
 * Back-end: Django.
