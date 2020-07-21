@@ -13,7 +13,7 @@ Django maneja los aspectos MVC de la mayoria del proyecto mientras que Vue manej
 
 ## Funcionalidades
 
-1. Ordernar pizzas.
+1. Ordenar pizzas.
 2. Generar resumenes de órden.
 2. A través del sitio de administración se  pueden acceder a los registros de la base de datos de manera intuitiva.
 
