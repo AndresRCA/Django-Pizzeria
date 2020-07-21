@@ -1,9 +1,26 @@
+#content {
+	background-color: #c34b27
+}
+
+#content > .container {
+	background-color: #fff
+}
+
+nav {
+	border-bottom: 2px solid #b56e31a8;
+}
+
 #header {
-  background-image: linear-gradient(rgb(40,40,40), transparent), url(../assets/pizzeria_header.jpeg);
-  background-blend-mode: multiply;
-  background-color: white;
-  background-size: cover;
-  background-position: center;
+	background-image: linear-gradient(rgb(40,40,40), transparent), url(../assets/pizzeria_header.jpeg);
+	background-blend-mode: multiply;
+	background-color: white;
+	background-size: cover;
+	background-position: center;
+}
+
+#header .hero-body {
+	padding-top: 7rem;
+	padding-bottom: 7rem;
 }
 
 #header .title, .subtitle {

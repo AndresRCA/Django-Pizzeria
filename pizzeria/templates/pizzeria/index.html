@@ -2,8 +2,13 @@
 
 {% block title %}Pizzeria | Inicio{% endblock %}
 
+{% block styles %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'pizzeria/css/index.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container">
+<div id="index" class="container">
 	<p>Esta es la página de inicio</p>
 </div>
 {% endblock %}

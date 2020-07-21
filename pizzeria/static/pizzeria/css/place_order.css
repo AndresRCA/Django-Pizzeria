@@ -1,3 +1,16 @@
+#toppingList {
+	display: flex;
+	justify-content: center;
+}
+
 #toppingList .tags:hover {
 	cursor: pointer;
+}
+
+#app .title {
+	margin-bottom: 0.5rem
+}
+
+#app hr {
+	margin-top: 0.5rem
 }

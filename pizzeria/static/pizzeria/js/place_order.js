@@ -1,8 +1,17 @@
 class Pizza {
 	constructor(size, toppings) {
-		this.size = size // size id
+		this.size = size // size object
 		this.toppings = toppings // [Topping]
 	}
+
+  getTotal() {
+    let total = 0.00
+    total += this.size.price
+    this.toppings.forEach(topping => {
+      total += topping.price
+    })
+    return total
+  }
 
   getToppingNames() {
     let topping_names = this.toppings.map(topping => topping.name)
@@ -15,16 +24,22 @@ var app = new Vue({
   el: '#app',
   data: {
   	sizes: [], // sizes received from backend: {id, name, price}
-  	selected_size: 1, // id representing the size
+  	selected_size: {}, // size object
   	toppings: [], // toppings received from backend: {id, name, price}
   	selected_toppings: [],
   	pizzas: [] // array of Pizza objects
   },
   computed: {
   	size_price() {
-  		let size = this.sizes.find(size => size.id == this.selected_size)
-  		return size.price
-  	}
+  		return this.selected_size.price
+  	},
+    order_total() {
+      let total = 0.00
+      this.pizzas.forEach(pizza => {
+        total += pizza.getTotal()
+      })
+      return total
+    }
   },
   methods: {
     addTopping(id) {
@@ -32,13 +47,17 @@ var app = new Vue({
       this.selected_toppings.push(topping)
     },
   	removeToppingFromSelected(index) {
-      console.log('is it working?')
   		this.selected_toppings.splice(index, 1)
   	},
   	addPizza() {
-  		let pizza = new Pizza(this.selected_size, this.selected_toppings)
+      let toppings_copy = Array.from(this.selected_toppings) // get shallow copy
+      let pizza = new Pizza(this.selected_size, toppings_copy)
   		this.pizzas.push(pizza)
-  	}
+      console.log(pizza.getTotal())
+  	},
+    removePizza(index) {
+      this.pizzas.splice(index, 1)
+    }
   },
   filters: {
   	capitalize(value) {
@@ -48,12 +67,12 @@ var app = new Vue({
   	},
   	currency(value) {
   		if (!value) return ''
-  		return Number.parseFloat(value).toFixed(2) + "$"
+  		return "$" + Number.parseFloat(value).toFixed(2)
   	}
   },
   created() {
-  	console.log('Vue instance been created successfully')
     this.sizes = sizes
     this.toppings = toppings
+    this.selected_size = sizes[0]
   }
 })

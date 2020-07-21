@@ -1,6 +1,6 @@
 {% extends 'pizzeria/base.html' %}
 
-{% block title %}Pizza | Place Order{% endblock %}
+{% block title %}Pizzeria | Ordenar{% endblock %}
 
 {% block styles %}
 {% load static %}
@@ -18,8 +18,13 @@
 {% endblock %}
 
 {% block content %}
-<div id="app" class="container">
-  <h1 class="is-title">Llena los datos para ordenar!</h1>
+<style>
+[v-cloak] {
+  display: none;
+}
+</style>
+<div id="app" v-cloak class="container section">
+  <h4 class="title is-4">Llena los datos para ordenar!</h4>
   <hr>
 
   <div> <!-- this is the form wrapper -->
@@ -28,7 +33,7 @@
       <div class="column">
         <div class="field is-horizontal is-pulled-left">
           <div class="field-label is-normal">
-            <label class="label">Cliente</label>
+            <label class="label">Cliente:</label>
           </div>
           <div class="field-body">
             <div class="field">
@@ -46,7 +51,7 @@
       </div>
     </div>
     
-    <h2 class="is-title">Customiza tu pizza</h2>
+    <h4 class="title is-4">Customiza tu pizza</h4>
     <hr>
 
     <div class="columns">
@@ -60,7 +65,7 @@
               <div class="select">
                 <select class="select" v-model="selected_size">
                   <!-- size options from database -->
-                  <option v-for="size in sizes" :value="size.id">[[ size.name | capitalize ]]</option>
+                  <option v-for="size in sizes" :value="size">[[ size.name | capitalize ]]</option>
                 </select>
               </div>
             </div>
@@ -75,7 +80,7 @@
 
     <div class="columns">
       <div class="column">
-        <h3 class="is-title">Toppings:</h3>      
+        <h6 class="title is-6">Toppings:</h6>      
         <div class="field is-grouped is-grouped-multiline">
           <!-- selected tags go here -->
           <div v-for="(topping, index) in selected_toppings" :key="topping.id" class="control">
@@ -87,7 +92,7 @@
         </div>
       </div>
       <div class="column">
-        <h3 class="is-title">Selecciona tus toppings:</h3>
+        <h6 class="title is-6 has-text-centered">Selecciona tus toppings:</h6>
         <div id="toppingList" class="field is-grouped is-grouped-multiline">
           <!-- topping tags are generated here -->
           <div v-for="topping in toppings" @click="addTopping(topping.id)" class="control">
@@ -107,15 +112,53 @@
       </div>
     </div>
 
-    <hr class="is-clearfix">
-    <h2 class="is-title">Pizzas:</h2>
-    <div v-if="pizzas">
+    <hr>
+    <h4 class="title is-4">Pizzas:</h4>
+    <div v-if="pizzas.length > 0">
       <ul>
-        <li v-for="(pizza, index) in pizzas">Pizza [[ index+1 ]]: tamaño -> [[ pizza.size | capitalize ]]; toppings -> [[ pizza.getToppingNames().join(', ') ]]</li>
+        <!-- pizza items go here -->
+        <li class="level" v-for="(pizza, index) in pizzas">
+          <div class="level-left">
+            <div class="level-item">
+              <a class="delete" @click="removePizza(index)"></a>
+            </div>
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Pizza</p>
+                <b>No.[[ index+1 ]]</b>
+              </div>
+            </div>
+            <div class="level-item has-text-centered">
+              <div>
+                <p class="heading">Tamaño</p>
+                <p>[[ pizza.size.name | capitalize ]]</p>
+              </div>
+            </div>
+            <div class="level-item">
+              <div>
+                <p class="heading">Toppings</p>
+                <p v-if="pizza.toppings.length > 0">[[ pizza.getToppingNames().join(', ') ]]</p>
+                <p v-else>No tiene toppings</p>
+              </div>
+            </div>
+          </div>
+          <div class="level-right">
+            <p class="level-item"><b>Total:</b>&nbsp;[[ pizza.getTotal() | currency ]]</p>
+          </div>
+        </li>
       </ul>
     </div>
-    <div v-else>
-      <p>No hay pizzas todavia</p>
+    <div v-else class="content has-text-centered">
+      <p class="is-size-5 has-text-weight-light">No hay pizzas todavia</p>
+    </div>
+
+    <hr>
+    
+    <div v-show="pizzas.length > 0" class="content" style="display: flex; justify-content: space-between;">
+      <button class="button is-info">Ordenar</button>
+      <p>
+        <b>Total de la orden:</b>&nbsp;[[ order_total | currency ]]      
+      </p>
     </div>
 
   </div>
