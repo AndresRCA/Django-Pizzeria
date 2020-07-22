@@ -54,7 +54,11 @@ var app = new Vue({
   	selected_size: {}, // size object
   	toppings: [], // toppings received from backend: {id, name, price}
   	selected_toppings: [],
-  	pizzas: [] // array of Pizza objects
+  	pizzas: [], // array of Pizza objects
+    error: {
+      message: '',
+      isOn: false
+    }
   },
   computed: {
   	size_price() {
@@ -98,9 +102,12 @@ var app = new Vue({
             'X-CSRFTOKEN': getCookie('csrftoken')
           }
         })
-        console.log(response)
+        console.log(response) // the response was successful
+        window.location.href = '/ordenar/confirmar' // redirect to confirmation view
       } catch(e) {
-        console.log(e);
+        console.log(e)
+        e = JSON.parse(e)
+        this.error.message = e.message
       }
     }
   },
