@@ -1,7 +1,5 @@
 # Diseño de página web para realizar pedidos de pizzas
 
----
-
 ## Componentes
 
 * Back-end: Django.
@@ -15,7 +13,7 @@ Django maneja los aspectos MVC de la mayoria del proyecto mientras que Vue manej
 
 ## Funcionalidades
 
-1. Ordernar pizzas.
+1. Ordenar pizzas.
 2. Generar resumenes de órden.
 2. A través del sitio de administración se  pueden acceder a los registros de la base de datos de manera intuitiva.
 
@@ -29,6 +27,6 @@ Django maneja los aspectos MVC de la mayoria del proyecto mientras que Vue manej
 
 2. Cambie el nombre del archivo .env.example a .env y configure el archivo con los valores adecuados.
 
-3. Corra el comando `python manage.py migrate`, si `ENV_MODE == 'DEV'` se crearan registros de prueba en la base de datos.
+3. Corra el comando `python manage.py migrate`, si `MODE == 'DEV'` en el archivo .env, se crearan registros de prueba en la base de datos.
 
 4. Para acceder al sitio admin corra `python manage.py createsuperuser` y sigua los pasos para crear un usuario.
