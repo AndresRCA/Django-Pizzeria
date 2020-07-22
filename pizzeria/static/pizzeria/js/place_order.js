@@ -1,3 +1,28 @@
+function getCookie(name) {
+  //https://docs.djangoproject.com/en/3.0/ref/csrf/
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
+}
+
+class Order {
+  constructor(first_name, last_name, pizzas) {
+    this.first_name = first_name
+    this.last_name = last_name
+    this.pizzas = pizzas // [Pizza]
+  }
+}
+
 class Pizza {
 	constructor(size, toppings) {
 		this.size = size // size object
@@ -23,6 +48,8 @@ var app = new Vue({
 	delimiters: ['[[', ']]'],
   el: '#app',
   data: {
+    first_name: '',
+    last_name: '',
   	sizes: [], // sizes received from backend: {id, name, price}
   	selected_size: {}, // size object
   	toppings: [], // toppings received from backend: {id, name, price}
@@ -53,10 +80,28 @@ var app = new Vue({
       let toppings_copy = Array.from(this.selected_toppings) // get shallow copy
       let pizza = new Pizza(this.selected_size, toppings_copy)
   		this.pizzas.push(pizza)
-      console.log(pizza.getTotal())
   	},
     removePizza(index) {
       this.pizzas.splice(index, 1)
+    },
+    placeOrder: async function() {
+      let pizzas_copy = Array.from(this.pizzas)
+      const order = new Order(this.first_name, this.last_name, pizzas_copy)
+
+      try {
+        const response = await fetch('/ordenar/', {
+          method: 'POST',
+          mode: 'same-origin',
+          body: JSON.stringify(order),
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFTOKEN': getCookie('csrftoken')
+          }
+        })
+        console.log(response)
+      } catch(e) {
+        console.log(e);
+      }
     }
   },
   filters: {

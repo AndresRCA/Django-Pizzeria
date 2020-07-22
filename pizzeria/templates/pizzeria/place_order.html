@@ -38,12 +38,12 @@
           <div class="field-body">
             <div class="field">
               <p class="control is-expanded">
-                <input name="first_name" class="input" type="text" placeholder="Primer Nombre" required>
+                <input v-model="first_name" name="first_name" class="input" type="text" placeholder="Primer Nombre" required>
               </p>
             </div>
             <div class="field">
               <p class="control is-expanded">
-                <input name="last_name" class="input" type="text" placeholder="Apellido" required>
+                <input v-model="last_name" name="last_name" class="input" type="text" placeholder="Apellido" required>
               </p>
             </div>
           </div>
@@ -155,7 +155,7 @@
     <hr>
     
     <div v-show="pizzas.length > 0" class="content" style="display: flex; justify-content: space-between;">
-      <button class="button is-info">Ordenar</button>
+      <button @click="placeOrder" class="button is-info">Ordenar</button>
       <p>
         <b>Total de la orden:</b>&nbsp;[[ order_total | currency ]]      
       </p>
