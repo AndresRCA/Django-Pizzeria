@@ -24,6 +24,15 @@
 }
 </style>
 <div id="app" v-cloak class="container section">
+
+  <!-- error message when a validation error occurs -->
+  <article v-show="error.isOn" class="message is-danger is-small">
+    <div class="message-header">
+      <p>Error in ...</p>
+      <button @click="deleteErrorMessage" class="delete" aria-label="delete"></button>
+    </div>
+    <div class="message-body">[[ error.message ]]</div>
+  </article>
   <h4 class="title is-4">Llena los datos para ordenar!</h4>
   <hr>
 

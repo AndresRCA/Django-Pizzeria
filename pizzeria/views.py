@@ -1,6 +1,5 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseBadRequest, HttpResponse
-
 import json
 
 from .models import Size, Topping, Order, Pizza

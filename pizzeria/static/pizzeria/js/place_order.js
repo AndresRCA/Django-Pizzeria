@@ -54,7 +54,11 @@ var app = new Vue({
   	selected_size: {}, // size object
   	toppings: [], // toppings received from backend: {id, name, price}
   	selected_toppings: [],
-  	pizzas: [] // array of Pizza objects
+  	pizzas: [], // array of Pizza objects
+    error: {
+      message: '',
+      isOn: false
+    }
   },
   computed: {
   	size_price() {
@@ -89,7 +93,7 @@ var app = new Vue({
       const order = new Order(this.first_name, this.last_name, pizzas_copy)
 
       try {
-        const response = await fetch('/ordenar/', {
+        let response = await fetch('/ordenar/', {
           method: 'POST',
           mode: 'same-origin',
           body: JSON.stringify(order),
@@ -98,10 +102,22 @@ var app = new Vue({
             'X-CSRFTOKEN': getCookie('csrftoken')
           }
         })
-        console.log("Success: " + response)
+
+        if(response.status != 200) { // throw error to handle it inside catch(){}
+          let error = await response.json()
+          let error_message = error.message
+          throw new Error(error_message)
+        }
+        
+        let res = await response.json()
+        console.log(res.message) // the response was successful
+        //window.location.href = '/ordenar/confirmar' // redirect to confirmation view
       } catch(e) {
-        console.log("Error: " + e);
+        console.log(e)
       }
+    },
+    deleteErrorMessage() {
+      this.error.isOn = false
     }
   },
   filters: {
