@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.http import HttpResponseBadRequest, HttpResponse
 
 import json
 
@@ -18,13 +18,16 @@ def place_order(request):
 	elif request.method == 'POST':
 		order_info = json.loads(request.body)
 		request.session['_order'] = order_info
-		for value in order_info.values():
-			if value == '' or value == ' ':
-				print('mal')
-				raise Http404()
-			else:
-				print('bien')
-				return HttpResponse('Vamos bien.')
+		error = 0
+		key = ''
+		for k, v in order_info.items():
+			if v == '':
+				error = 1
+				key = k
+		if error == 1:
+			return HttpResponseBadRequest(f'ERROR: el parametro {key} no puede estar vacio.')
+		else:
+			return HttpResponse('No hay campos vacios.')
 
 def order_summary(request):
 	return render(request, 'pizzeria/index.html')
