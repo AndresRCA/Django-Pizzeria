@@ -98,9 +98,9 @@ var app = new Vue({
             'X-CSRFTOKEN': getCookie('csrftoken')
           }
         })
-        console.log(response)
+        console.log("Success: " + response)
       } catch(e) {
-        console.log(e);
+        console.log("Error: " + e);
       }
     }
   },
