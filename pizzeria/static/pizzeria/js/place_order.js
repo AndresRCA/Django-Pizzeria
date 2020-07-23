@@ -104,16 +104,17 @@ var app = new Vue({
         })
 
         if(response.status != 200) { // throw error to handle it inside catch(){}
-          let error = await response.json()
-          let error_message = error.message
+          let error_message = await response.text()
           throw new Error(error_message)
         }
         
-        let res = await response.json()
-        console.log(res.message) // the response was successful
+        let res_message = await response.text()
+        console.log(res_message) // the response was successful
         //window.location.href = '/ordenar/confirmar' // redirect to confirmation view
       } catch(e) {
         console.log(e)
+		this.error.message = e
+		this.error.isOn = true
       }
     },
     deleteErrorMessage() {
