@@ -30,4 +30,6 @@ def place_order(request):
 			return HttpResponse('No hay campos vacios.')
 
 def order_summary(request):
+	order_info = request.session['_order']
+	print(order_info)
 	return render(request, 'pizzeria/index.html')
