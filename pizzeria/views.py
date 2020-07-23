@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse, Http404, JsonResponse
 import json
 from .models import Size, Topping, Order, Pizza
 
@@ -13,4 +14,6 @@ def place_order(request):
 		context['toppings'] = json.dumps(list(Topping.objects.all().values()))		
 		return render(request, 'pizzeria/place_order.html', context)
 	elif request.method == 'POST':
-		# collect order object
+		error = {}
+		error['message'] = 'BAH'
+		return JsonResponse(error, status=400)

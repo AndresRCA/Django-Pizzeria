@@ -93,7 +93,7 @@ var app = new Vue({
       const order = new Order(this.first_name, this.last_name, pizzas_copy)
 
       try {
-        const response = await fetch('/ordenar/', {
+        let response = await fetch('/ordenar/', {
           method: 'POST',
           mode: 'same-origin',
           body: JSON.stringify(order),
@@ -102,13 +102,22 @@ var app = new Vue({
             'X-CSRFTOKEN': getCookie('csrftoken')
           }
         })
-        console.log(response) // the response was successful
-        window.location.href = '/ordenar/confirmar' // redirect to confirmation view
+
+        if(response.status != 200) { // throw error to handle it inside catch(){}
+          let error = await response.json()
+          let error_message = error.message
+          throw new Error(error_message)
+        }
+        
+        let res = await response.json()
+        console.log(res.message) // the response was successful
+        //window.location.href = '/ordenar/confirmar' // redirect to confirmation view
       } catch(e) {
         console.log(e)
-        e = JSON.parse(e)
-        this.error.message = e.message
       }
+    },
+    deleteErrorMessage() {
+      this.error.isOn = false
     }
   },
   filters: {
