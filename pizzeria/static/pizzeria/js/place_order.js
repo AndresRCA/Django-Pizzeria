@@ -110,7 +110,7 @@ var app = new Vue({
         
         let res_message = await response.text()
         console.log(res_message) // the response was successful
-        //window.location.href = '/ordenar/confirmar' // redirect to confirmation view
+        window.location.href = '/ordenar/confirmar' // redirect to confirmation view
       } catch(e) {
         console.log(e)
 		this.error.message = e

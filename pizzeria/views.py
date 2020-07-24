@@ -4,7 +4,6 @@ import json
 
 from .models import Size, Topping, Order, Pizza
 
-# Create your views here.
 def index(request):
 	return render(request, 'pizzeria/index.html')
 
@@ -16,21 +15,66 @@ def place_order(request):
 		return render(request, 'pizzeria/place_order.html', context)
 	elif request.method == 'POST':
 		order_info = json.loads(request.body) # Obtains de info from the poll.
-		request.session['_order'] = order_info # Session var so it can be use in another function.
-		error = 0
+		error = False
 		key = ''
 		for k, v in order_info.items(): # Checks each value of the dictionary if the value is empty returns a erorr 400
 			if v == '':
-				error = 1
+				error = True
 				key = k
-		if error == 1:
+		if error:
 			return HttpResponseBadRequest(f'ERROR: el parametro {key} no puede estar vacio.')
 		else:
+			request.session['_order'] = order_info # session var used in pizzeria:confirm_order url.
 			return HttpResponse('No hay campos vacios.')
 
-def order_summary(request):
-	"""generates de necessaire data for the summary"""
+def confirm_order(request):
+	"""generates the necessary data for the summary"""
 	order_info = request.session['_order'] # Get te data from the session var
+
+	# context object blueprint
+	summary = {
+		'first_name': '',
+		'last_name': '',
+		'pizzas': [], # [{size: {size.name, size.price}, toppings: [{topping.name, topping.amount, topping.total}], total: 0.00}]
+		'total': 0.00
+	}
+
+	summary['first_name'] = order_info['first_name']
+	summary['last_name'] = order_info['last_name']
+
+	from collections import Counter
+	order_total = 0.00
+	for pizza in order_info['pizzas']:
+		pizza_total = 0.00
+
+		# add size price to pizza total
+		pizza_total += pizza['size']['price']
+
+		# create size dic for summary['pizzas'][i]['size']
+		size = {'name': pizza['size']['name'], 'price': pizza['size']['price']}
+
+		# generate neccesary data for summary['toppings']
+		topping_ids = [topping['id'] for topping in pizza['toppings']] # get [topping.id, ...]
+		t_counter = Counter(topping_ids) # get [{'topping.id': amount}, ...]
+		topping_list = [] # [{topping.name, topping.amount, topping.total}, ...], this is appended to summary['pizzas'][i]['toppings']
+		
+		for topping_id, topping_amount in t_counter.items():
+			topping = Topping.objects.get(pk=topping_id)
+			topping_total = topping.price * topping_amount
+			topping_list.append({'name': topping.name, 'amount': topping_amount, 'total': topping_total})
+			
+			pizza_total += topping_total # update pizza total
+
+		# insert pizza summary
+		summary['pizzas'].append({'size': size, 'toppings': topping_list, 'total': pizza_total})
+		order_total += pizza_total
+
+	summary['total'] = order_total
+
+	request.session['_summary'] = summary # useful variable in case the user prints a summary of the order
+
+	return render(request, 'pizzeria/confirm_order.html', summary)
+	
 	# Separate each data from de object
 	print('-'*50)
 	#print(order_info)

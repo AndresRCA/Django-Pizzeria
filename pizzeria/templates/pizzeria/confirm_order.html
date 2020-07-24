@@ -1,0 +1,22 @@
+{% extends 'pizzeria/base.html' %}
+
+{% block title %}Pizzeria | Confirmar Orden{% endblock %}
+
+{% block content %}
+<div class="container section content">
+  <h3>Nombre: {{ first_name }} {{ last_name }}</h3>
+  {% for pizza in pizzas %}
+    <p>Tamaño: {{ pizza.size.name }}, costo: {{ pizza.size.price }}</p>
+    {% if pizza.toppings %}
+      <ul>
+      {% for topping in pizza.toppings %}
+        <li>{{ topping.name }} - {{topping.amount}}, costo: {{topping.total}}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endfor %}
+  <h3>Total de la orden: {{ total }}</h3>
+  <h4>Esta información es correcta?</h4>
+  <button class="button is-info">SI</button>&nbsp;<button class="button is-danger">NO</button>
+</div>
+{% endblock %}
