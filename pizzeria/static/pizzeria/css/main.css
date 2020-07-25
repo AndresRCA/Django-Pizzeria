@@ -1,5 +1,6 @@
-#content {
-	background-color: #c34b27
+html, body {
+	height: 100vh;
+	background-color: #c34b27;
 }
 
 #content > .container {
