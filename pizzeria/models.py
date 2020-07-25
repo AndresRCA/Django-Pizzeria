@@ -35,7 +35,14 @@ class Order(models.Model):
 		for pizza in self.pizzas.all():
 			total += pizza.total
 		return round(total, 2)
+
+class Sale(models.Model):
+	order = models.OneToOneField(Order, on_delete=models.CASCADE, primary_key=True)
+	total = models.FloatField() # this total comes from self.order.total at the moment of adding a Sale obj to the DB
 	
+	def __str__(self):
+		return "Sale from {}".format(self.order.full_name)
+
 class Pizza(models.Model):
 	size = models.ForeignKey(Size, on_delete=models.CASCADE)
 	order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='pizzas') # related_name lets me do this: order = Order.objects.get(id=1) -> order.pizzas.all() instead of order.pizza_set.all()
