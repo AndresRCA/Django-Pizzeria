@@ -13,7 +13,7 @@ class PizzaInline(admin.StackedInline):
 class OrderAdmin(admin.ModelAdmin):
 	inlines = [PizzaInline]
 	list_filter = ['order_date', 'pizzas__size', 'pizzas__toppings']
-	search_fields = ['first_name', 'last_name', 'order_date']
+	search_fields = ['first_name', 'last_name', 'order_date__day']
 	list_display = ('fullName', 'order_date', 'countPizzas', 'total')
 	date_hierarchy = 'order_date'
 	ordering = ['-sale__total']
