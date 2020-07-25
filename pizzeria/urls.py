@@ -1,9 +1,9 @@
 from django.urls import path
-from . import views
+from .views import index, PlaceOrder, ConfirmOrder
 
 app_name = 'pizzeria'
 urlpatterns = [
-	path('', views.index, name='index'),
-	path('ordenar/', views.place_order, name='place_order'),
-	path('ordenar/confirmar/', views.confirm_order, name='confirm_order')
+	path('', index, name='index'),
+	path('ordenar/', PlaceOrder.as_view(), name='place_order'),
+	path('ordenar/confirmar/', ConfirmOrder.as_view(), name='confirm_order')
 ]
