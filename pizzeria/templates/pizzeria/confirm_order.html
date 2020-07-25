@@ -17,6 +17,6 @@
   {% endfor %}
   <h3>Total de la orden: {{ total }}</h3>
   <h4>Esta información es correcta?</h4>
-  <button class="button is-info">SI</button>&nbsp;<button class="button is-danger">NO</button>
+  <a href="{% url 'pizzeria:finalize_order' %}" class="button is-info">SI</a>&nbsp;<a href="{% url 'pizzeria:place_order' %}" class="button is-danger">NO</a>
 </div>
 {% endblock %}

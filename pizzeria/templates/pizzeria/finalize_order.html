@@ -1,0 +1,19 @@
+{% extends 'pizzeria/base.html' %}
+
+{% block title %}Pizzeria | Finalizar Orden{% endblock %}
+
+{% block content %}
+<div class="container section content">
+	{% if status == 'SUCCESS' %}
+		<h2>Su orden fue enviada exitosamente!</h2>
+		<hr>
+		<p>Desea imprimir un resumen?</p>
+		<a class="button is-primary" href="{% url 'pizzeria:generate_summary' %}">Generar resumen</a>&nbsp;<a class="button" href="{% url 'pizzeria:index' %}">Salir</a>
+	{% elif status == 'ERROR' %}
+		<h2>ERROR</h2>
+		<hr>
+		<p>Hubo un problema para enviar su orden, quiere volver a intentar?</p>
+		<a class="button" href="{% url 'pizzeria:place_order' %}">Si</a>&nbsp;<a class="button" href="{% url 'pizzeria:index' %}">Salir</a>
+	{% endif %}
+</div>
+{% endblock %}
