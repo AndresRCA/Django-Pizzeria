@@ -36,7 +36,7 @@
   <h4 class="title is-4">Llena los datos para ordenar!</h4>
   <hr>
 
-  <div> <!-- this is the form wrapper -->
+  <form @submit.prevent="placeOrder">
     <!-- {% csrf_token %} -->
     <div class="columns">
       <div class="column">
@@ -117,7 +117,7 @@
 
     <div class="field">
       <div class="control">
-        <button @click="addPizza" class="button">+Agregar Pizza</button>
+        <button type="button" @click="addPizza" class="button">+Agregar Pizza</button>
       </div>
     </div>
 
@@ -164,13 +164,13 @@
     <hr>
     
     <div v-show="pizzas.length > 0" class="content" style="display: flex; justify-content: space-between;">
-      <button @click="placeOrder" class="button is-info">Ordenar</button>
+      <input type="submit" value="Ordenar" class="button is-info">
       <p>
         <b>Total de la orden:</b>&nbsp;[[ order_total | currency ]]      
       </p>
     </div>
 
-  </div>
+  </form>
 </div>
 {% endblock %}
 
