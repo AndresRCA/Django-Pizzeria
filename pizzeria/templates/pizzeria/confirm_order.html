@@ -3,19 +3,21 @@
 {% block title %}Pizzeria | Confirmar Orden{% endblock %}
 
 {% block content %}
+{% load pizzeria_extras %} <!-- custom filters are loaded -->
 <div class="container section content">
   <h3>Nombre: {{ first_name }} {{ last_name }}</h3>
   {% for pizza in pizzas %}
-    <p>Tamaño: {{ pizza.size.name }}, costo: {{ pizza.size.price }}</p>
+	<h4>Pizza Nr.{{ forloop.counter }}</h4>
+    <p>Tamaño: {{ pizza.size.name }}, costo: {{ pizza.size.price | currency }}</p>
     {% if pizza.toppings %}
       <ul>
       {% for topping in pizza.toppings %}
-        <li>{{ topping.name }} - {{topping.amount}}, costo: {{topping.total}}</li>
+        <li>{{ topping.name }} - {{topping.amount}}, costo: {{topping.total | currency}}</li>
       {% endfor %}
       </ul>
     {% endif %}
   {% endfor %}
-  <h3>Total de la orden: {{ total }}</h3>
+  <h3>Total de la orden: {{ total | currency }}</h3>
   <h4>Esta información es correcta?</h4>
   <a href="{% url 'pizzeria:finalize_order' %}" class="button is-info">SI</a>&nbsp;<a href="{% url 'pizzeria:place_order' %}" class="button is-danger">NO</a>
 </div>
