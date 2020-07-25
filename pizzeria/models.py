@@ -31,6 +31,7 @@ class Order(models.Model):
 	
 	@property
 	def total(self):
+		"""Get current total of order, should only be used when inserting to Sale"""
 		total = 0.00
 		for pizza in self.pizzas.all():
 			total += pizza.total
@@ -56,15 +57,17 @@ class Pizza(models.Model):
 	
 	@property
 	def total(self):
+		"""Get current total of pizza (depends on Topping.price values)"""
 		total = 0.00
 		total += self.size.price
-		for topping in self.toppings.all():			
+		for topping in self.toppings.all():
 			t_amount = self.getToppingAmount(topping)
 			for i in range(t_amount):
 				total += topping.price
 		return round(total, 2)
 	
 	def getToppingAmount(self, topping): # is there a way to check the ammount via the pizza object?
+		"""Get topping amount from ToppingAmount model"""
 		t_a = ToppingAmount.objects.get(pizza=self, topping=topping)
 		if not t_a: return 0 # if topping was not found 
 		return t_a.amount

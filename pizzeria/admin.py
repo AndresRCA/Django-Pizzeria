@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.db.models import F, ExpressionWrapper, DecimalField
 
 # Register your models here.
-from .models import Order, Pizza, Topping, Size
+from .models import Sale, Order, Pizza, Topping, Size
 
 #============= Order ==============#
 
@@ -16,27 +16,18 @@ class OrderAdmin(admin.ModelAdmin):
 	search_fields = ['first_name', 'last_name', 'order_date']
 	list_display = ('fullName', 'order_date', 'countPizzas', 'total')
 	date_hierarchy = 'order_date'
-
-	"""def calculated_total(self, obj):
-		return obj.total
-
-	calculated_total.admin_order_field = 'total'
-
-	def get_queryset(self, request):
-		qs = super(OrderAdmin, self).get_queryset(request)
-		qs = qs.annotate(total=ExpressionWrapper(F('cost')*F('quantity'), output_field=DecimalField())).order_by('total')
-		return qs"""
+	ordering = ['-sale__total']
 	
 	def fullName(self, obj):
 		return obj.full_name
 	fullName.short_description = 'Name'
 
 	def countPizzas(self, obj):
-		return len(obj.pizzas.all())
+		return obj.pizzas.all().count()
 	countPizzas.short_description = 'Pizzas'
 	
 	def total(self, obj):
-		return "${:.2f}".format(obj.total)
+		return "${:.2f}".format(obj.sale.total)
 
 admin.site.register(Order, OrderAdmin)
 
