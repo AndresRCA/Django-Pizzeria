@@ -1,9 +1,10 @@
+from datetime import datetime
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.views.generic import View
 import json
 
-from .models import Size, Topping, Order, Pizza
+from .models import Size, Topping, Order, Pizza, ToppingAmount
 
 def index(request):
 	return render(request, 'pizzeria/index.html')
@@ -87,9 +88,25 @@ class ConfirmOrder(View):
 class FinalizeOrder(View):
 	def get(self, request, *args, **kwargs):
 		if request.session.get('_order'):
-			# get order data from request.session['_order'] and add it to the database
-			# [code goes here]
-			del request.session['_order'] # delete variable from session
+			order_info = request.session['_summary']
+			order = Order.objects.create(first_name=order_info.get('first_name'), 
+										last_name=order_info.get('last_name'),
+										order_date=datetime.now()) # If i dont do this seconds will show a lot of decimal points.
+			order.save()
+
+			for pizza in order_info.get('pizzas'):
+				size = pizza.get('size')
+				pizza_object = Pizza.objects.create(size=Size.objects.get(name=size.get('name')), order=order)
+				pizza_object.save()
+
+				for topping in pizza.get('toppings'):
+					toppings_object = ToppingAmount.objects.create(
+						amount=topping.get('amount'),
+						pizza_id=pizza_object.id,
+						topping_id=Topping.objects.get(name=topping.get('name')).id
+						)
+					toppings_object.save()
+			#del request.session['_order'] # delete variable from session
 			return render(request, 'pizzeria/finalize_order.html', {'status': 'SUCCESS'}) # if a database error occurred send {'status': 'ERROR'}
 		else:
 			return HttpResponseBadRequest() # will show error for someone that didn't make an order and is trying to access the url
