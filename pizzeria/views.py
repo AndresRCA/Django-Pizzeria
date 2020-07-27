@@ -37,7 +37,7 @@ class PlaceOrder(View):
 class ConfirmOrder(View):
 	def get(self, request, *args, **kwargs):
 		"""generates the necessary data for the summary"""
-		if request.session.get['_summary']:
+		if request.session.get('_summary'):
 			del request.session['_summary'] # delete previous summary if it exists
 		
 		order_info = request.session['_order'] # Get te data from the session var
@@ -86,7 +86,7 @@ class ConfirmOrder(View):
 
 class FinalizeOrder(View):
 	def get(self, request, *args, **kwargs):
-		if request.session.get['_order']:
+		if request.session.get('_order'):
 			# get order data from request.session['_order'] and add it to the database
 			# [code goes here]
 			del request.session['_order'] # delete variable from session
@@ -95,7 +95,7 @@ class FinalizeOrder(View):
 			return HttpResponseBadRequest() # will show error for someone that didn't make an order and is trying to access the url
 		
 def generateSummary(request):
-	if request.session.get['_summary']:
+	if request.session.get('_summary'):
 		# generate summary to send
 		return HttpResponse('here goes the summary')
 	else:
