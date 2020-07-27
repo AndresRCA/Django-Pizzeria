@@ -4,7 +4,7 @@ from django.http import HttpResponseBadRequest, HttpResponse
 from django.views.generic import View
 import json
 
-from .models import Size, Topping, Order, Pizza, ToppingAmount
+from .models import Size, Topping, Order, Pizza, ToppingAmount, Sale
 
 def index(request):
 	return render(request, 'pizzeria/index.html')
@@ -98,7 +98,7 @@ class FinalizeOrder(View):
 				size = pizza.get('size')
 				pizza_object = Pizza.objects.create(size=Size.objects.get(name=size.get('name')), order=order)
 				pizza_object.save()
-
+				print(pizza)
 				for topping in pizza.get('toppings'):
 					toppings_object = ToppingAmount.objects.create(
 						amount=topping.get('amount'),
@@ -106,6 +106,8 @@ class FinalizeOrder(View):
 						topping_id=Topping.objects.get(name=topping.get('name')).id
 						)
 					toppings_object.save()
+				
+				sale_object = Sale.objects.create(order=order, total=pizza.get('total'))
 			#del request.session['_order'] # delete variable from session
 			return render(request, 'pizzeria/finalize_order.html', {'status': 'SUCCESS'}) # if a database error occurred send {'status': 'ERROR'}
 		else:
