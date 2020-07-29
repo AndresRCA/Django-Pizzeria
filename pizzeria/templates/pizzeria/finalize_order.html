@@ -7,8 +7,8 @@
 	{% if status == 'SUCCESS' %}
 		<h2>Su orden fue enviada exitosamente!</h2>
 		<hr>
-		<p>Desea imprimir un resumen?</p>
-		<a class="button is-primary" href="{% url 'pizzeria:generate_summary' %}">Generar resumen</a>&nbsp;<a class="button" href="{% url 'pizzeria:index' %}">Salir</a>
+		<p>Espero que haya disfrutado de nuestros servicios, hasta la próxima vez!</p>
+		<a class="button" href="{% url 'pizzeria:index' %}">Salir</a>
 	{% elif status == 'ERROR' %}
 		<h2>ERROR</h2>
 		<hr>

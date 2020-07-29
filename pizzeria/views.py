@@ -112,10 +112,3 @@ class FinalizeOrder(View):
 			return render(request, 'pizzeria/finalize_order.html', {'status': 'SUCCESS'}) # if a database error occurred send {'status': 'ERROR'}
 		else:
 			return HttpResponseBadRequest() # will show error for someone that didn't make an order and is trying to access the url
-		
-def generateSummary(request):
-	if request.session.get('_summary'):
-		# generate summary to send
-		return HttpResponse('here goes the summary')
-	else:
-		return HttpResponseBadRequest()

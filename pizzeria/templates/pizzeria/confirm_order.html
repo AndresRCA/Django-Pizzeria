@@ -8,17 +8,31 @@
   <h3>Nombre: {{ first_name }} {{ last_name }}</h3>
   {% for pizza in pizzas %}
 	<h4>Pizza Nr.{{ forloop.counter }}</h4>
-    <p>Tamaño: {{ pizza.size.name }}, costo: {{ pizza.size.price | currency }}</p>
+    <div class="columns is-mobile">
+      <span class="column is-4">Tamaño: {{ pizza.size.name }}</span>
+      <span class="column is-4"></span>
+      <span class="column is-4">costo: {{ pizza.size.price | currency }}</span>
+    </div>
     {% if pizza.toppings %}
-      <ul>
+      <div class="columns is-multiline is-mobile">
       {% for topping in pizza.toppings %}
-        <li>{{ topping.name }} - {{topping.amount}}, costo: {{topping.total | currency}}</li>
+        <span class="column is-4">{{ topping.name }}</span>
+        <span class="column is-4">{{topping.amount}} {% if topping.amount == 1 %}unidad{% else %}unidades{% endif %}</span>
+        <span class="column is-4">costo: {{topping.total | currency}}</span>
       {% endfor %}
-      </ul>
+      </div>
     {% endif %}
   {% endfor %}
-  <h3>Total de la orden: {{ total | currency }}</h3>
+  <hr>
+  <div class="columns is-mobile">
+    <span class="column is-4"></span>
+    <span class="column is-4"></span>
+    <span class="column is-4"><b>total:</b> {{ total | currency }}</span>
+  </div>
   <h4>Esta información es correcta?</h4>
-  <a href="{% url 'pizzeria:finalize_order' %}" class="button is-info">SI</a>&nbsp;<a href="{% url 'pizzeria:place_order' %}" class="button is-danger">NO</a>
+  <div style="display: flex; justify-content: center;">
+    <a href="{% url 'pizzeria:finalize_order' %}" class="mx-2 button is-info">SI</a>
+    <a href="{% url 'pizzeria:place_order' %}" class="mx-2 button is-danger">NO</a>
+  </div>
 </div>
 {% endblock %}
