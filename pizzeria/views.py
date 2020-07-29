@@ -1,4 +1,4 @@
-from datetime import datetime
+from django.utils import timezone
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseBadRequest, HttpResponse
 from django.views.generic import View
@@ -41,7 +41,11 @@ class ConfirmOrder(View):
 		if request.session.get('_summary'):
 			del request.session['_summary'] # delete previous summary if it exists
 		
+		if not request.session.get('_order'):
+			return HttpResponseBadRequest() # if an order wasn't placed don't render the page
+
 		order_info = request.session['_order'] # Get te data from the session var
+		del request.session['_order']
 
 		# context object blueprint
 		summary = {
@@ -82,33 +86,28 @@ class ConfirmOrder(View):
 			order_total += pizza_total
 
 		summary['total'] = order_total
-		request.session['_summary'] = summary # useful variable in case the user prints a summary of the order
+		request.session['_summary'] = summary # used for inserting data into the db
 		return render(request, 'pizzeria/confirm_order.html', summary)
 
 class FinalizeOrder(View):
 	def get(self, request, *args, **kwargs):
-		if request.session.get('_order'):
+		if request.session.get('_summary'):
 			order_info = request.session['_summary']
 			order = Order.objects.create(first_name=order_info.get('first_name'), 
 										last_name=order_info.get('last_name'),
-										order_date=datetime.now()) # If i dont do this seconds will show a lot of decimal points.
-			order.save()
+										order_date=timezone.now())
 
 			for pizza in order_info.get('pizzas'):
-				size = pizza.get('size')
-				pizza_object = Pizza.objects.create(size=Size.objects.get(name=size.get('name')), order=order)
-				pizza_object.save()
-				print(pizza)
+				size = Size.objects.get(name=pizza.get('size').get('name'))
+				pizza_object = Pizza.objects.create(size=size, order=order)
 				for topping in pizza.get('toppings'):
-					toppings_object = ToppingAmount.objects.create(
+					ToppingAmount.objects.create(
 						amount=topping.get('amount'),
 						pizza_id=pizza_object.id,
 						topping_id=Topping.objects.get(name=topping.get('name')).id
-						)
-					toppings_object.save()
-				
-				sale_object = Sale.objects.create(order=order, total=pizza.get('total'))
-			#del request.session['_order'] # delete variable from session
+					)
+			
+			Sale.objects.create(order=order, total=order.total)
 			return render(request, 'pizzeria/finalize_order.html', {'status': 'SUCCESS'}) # if a database error occurred send {'status': 'ERROR'}
 		else:
 			return HttpResponseBadRequest() # will show error for someone that didn't make an order and is trying to access the url
