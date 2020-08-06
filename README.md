@@ -9,7 +9,7 @@ Django maneja los aspectos MVC de la mayoria del proyecto mientras que Vue manej
 
 ## Esquema de la base de datos
 
-...
+![Esquema](/doc/Models.png)
 
 ## Funcionalidades
 
