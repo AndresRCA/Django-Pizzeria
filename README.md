@@ -33,4 +33,4 @@ Django handles the MVC aspects of most of the project while Vue handles the view
 
 ## P.S
 
-This is a project that was required in a class I took, so if the website doesn't look that good in different viewports know that minimal effort was put on the style aspect of things, the code and functionality however was took seriously during development.
+This is a project that was required in a class I took, so if the website doesn't look that good in different viewports know that minimal effort was put on the style aspect of things, the code and functionality however was taken seriously during development.
